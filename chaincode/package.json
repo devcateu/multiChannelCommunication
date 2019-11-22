@@ -1,0 +1,58 @@
+{
+    "name": "hlf-example",
+    "version": "1.0.0",
+    "description": "simple HLF example",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "engines": {
+        "node": ">=8",
+        "npm": ">=5"
+    },
+    "scripts": {
+        "lint": "tslint --fix -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+        "pretest": "npm run lint",
+        "test": "CORE_CHAINCODE_LOGGING_LEVEL=DEBUG jest",
+        "start": "fabric-chaincode-node start",
+        "build": "tsc --alwaysStrict",
+        "build:watch": "tsc -w --alwaysStrict",
+        "prepublishOnly": "npm run build"
+    },
+    "engineStrict": true,
+    "author": "devcat",
+    "dependencies": {
+        "fabric-contract-api": "~1.4.2",
+        "fabric-shim": "~1.4.2"
+    },
+    "devDependencies": {
+        "@theledger/fabric-mock-stub": "^4.0.0",
+        "@types/big.js": "^4.0.5",
+        "@types/jest": "^24.0.15",
+        "@types/node": "^12.7.2",
+        "jest": "^24.8.0",
+        "nyc": "^14.1.1",
+        "ts-jest": "^24.0.2",
+        "ts-node": "^8.3.0",
+        "tslint": "^5.11.0",
+        "typescript": "^3.5.0"
+    },
+    "nyc": {
+        "extension": [
+            ".ts",
+            ".tsx"
+        ],
+        "exclude": [
+            "coverage/**",
+            "dist/**"
+        ],
+        "reporter": [
+            "text-summary",
+            "html"
+        ],
+        "all": true,
+        "check-coverage": true,
+        "statements": 90,
+        "branches": 90,
+        "functions": 90,
+        "lines": 90
+    }
+}

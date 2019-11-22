@@ -1,0 +1,15 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Node template
+# Logs
+logs
+*.log
+
+chaincode/node_modules
+.idea
+# generated code when translating from Typescript to JavaScript
+chaincode/dist
+# othe generated sources
+chaincode/hyperledger
+channel-artifacts
+crypto-config
+target
