@@ -1,5 +1,5 @@
-import PingContract from './PingContract';
+import KeyValueContract from './KeyValueContract';
 
 export {
-    PingContract,
+    KeyValueContract,
 };

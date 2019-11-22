@@ -1,8 +1,8 @@
 import {Context, Contract} from 'fabric-contract-api';
 
-export default class AgentPingContract extends Contract {
+export default class AgentContract extends Contract {
     constructor() {
-        super('com.devcat.agentping');
+        super('com.devcat.agent');
     }
 
     public async instantiate() {

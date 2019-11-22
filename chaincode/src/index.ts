@@ -1,7 +1,7 @@
-import {PingContract} from './ping';
-import {AgentPingContract} from "./agentping";
+import {KeyValueContract} from './ping';
+import {AgentContract} from "./agent";
 
 export const contracts: any[] = [
-    AgentPingContract,
-    PingContract
+    AgentContract,
+    KeyValueContract
 ];

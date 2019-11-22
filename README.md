@@ -1,10 +1,6 @@
 TODO:
-* pokazać jaki jest dostęp do danych na tym samym channel-u
-* pokazać jaki jest dostęp do danych na innym, channelu
-*  poszukać czy na tym samym channelu możemy mieć dostęp do danych innego kontraktu 
-* zrobić przyklad saga na kontraktach 
-  * lokalnie
-  * inny channel
+ * wolanie na channelu, ktory nie ma zainstalowanego chaincode
+ * pokazać proste wywołanie   - przenieść do skryptów
 
 co  chciałbym pokazać:
 - jak wołać chaincode
@@ -70,9 +66,37 @@ NO RESULT FOR KEY
 ```
 
 Jak widać oba chaincody pomimo przechowywania danych pod jednym kluczem nie dzielą domyślnie stanu 
+Dzieje się tak ponieważ dla każdego zainstalowanego chaincodu istnieje osobna baza, co można łatwo sprawdzić w couchDB:
+ http://localhost:5984/_utils/#/_all_dbs  
+ ![alt text](images/CouchDB_databases.png "Created databases in CouchDB")
 
+ 
 ### 
-  ####każdy peer powinien mieć swojego  
+możemy querować inne chaincody na tym samym kanale `01_takeValueFromOtherChaincode.sh`
+
+lepiej możemy querować inne chaincody na innym kanale `02_takeValueFromOtherChannel.sh`
+
+jeszcze lepiej możemy wywolywać inne kontrakty na tym samym kanal `03_putValueToOtherChaincodel.sh`
+
+i wogole extra rewelacja możemy wywoływać inne kontrakty na innych kanałach `04_putValueToOtherChannel.sh` , a jednak nie.. 
+To znaczy można wywolać jednak rezultat nie zostanie zapisany na blockchainie. Dzieje się tak, ponieważ Hyperledger pomija 
+operacja wykonywane na innych kanałach w rezultacie. 
+
+W tym calym optymiźmie warto też zwrócić, że wyołanie jak i querowanie dowolnego chaincode na tym samym kanale zachowuje gwarancje 
+jakie daje Nam Fabric, czyli:
+* jeżeli, któraś z modyfikowanych wartości zmieniła się między wywołaniem a zapisaniem danych. Transakcja jest odrzucana.
+* jeżeli transakcja modyfikuje dane, ale jednocześnie woła inny chaincode o dane i dane na tym innym chaincodzie zostaną zmodyfikowane cała. Transakcja jest odrzucana.
+
+W przypadku wywoływania chaincode na innym kanale. Jedyna gwarancja HLF-a, która może odnaleźć nieprawidłowości to walidacja i  porównywanie odpowiedzi 
+ze wszystkich endorser peerów. Jeżeli któryś z peerów zwróci inną odpowiedź, cała transakcja jest odrzucana.
+
+To prowadzi do kolejnego wniosku. Jeżeli chaincode wykonuje jakąś akcję, ktorej rezultat nie zależy tylko od parametrów wejściowych 
+(np. zależy od czasu, wywoluje random). Transakcja zostanie odrzucona przez orderera, ponieważ peery albo zmodyfikuj wartość 
+zależną od niedeterministycznych wartości albo zwrócą różne odpowiedzi. patrz `05_putTime.sh` oraz `06_putValueAndTime.sh`
+
+   
+
+  ####każdy peer powinien mieć swoją bazę
 
 ### na koniec     
 
