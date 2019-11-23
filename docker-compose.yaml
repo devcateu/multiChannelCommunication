@@ -1,12 +1,12 @@
 
 version: '2'
 networks:
-  byfn:
+  our_net:
 services:
 
   orderer.example.com:
     container_name: orderer.example.com
-    image: hyperledger/fabric-orderer
+    image: hyperledger/fabric-orderer:1.4.4
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
@@ -22,21 +22,21 @@ services:
     ports:
       - 7050:7050
     networks:
-      - byfn
+      - our_net
 
   couchdb0.org1:
     container_name: couchdb0.org1
-    image: hyperledger/fabric-couchdb
+    image: hyperledger/fabric-couchdb:0.4.18
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
     ports:
-      - "5984:5984"
+      - 5984:5984
     networks:
-      - byfn
+      - our_net
 
   peer0.org1.example.com:
-    image: hyperledger/fabric-peer
+    image: hyperledger/fabric-peer:1.4.4
     container_name: peer0.org1.example.com
     environment:
       - CORE_PEER_ID=peer0.org1.example.com
@@ -44,7 +44,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_byfn
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_our_net
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_PROFILE_ENABLED=true
@@ -60,12 +60,12 @@ services:
     ports:
       - 7051:7051
     networks:
-      - byfn
+      - our_net
     depends_on:
       - couchdb0.org1
 
   peer0.org2.example.com:
-    image: hyperledger/fabric-peer
+    image: hyperledger/fabric-peer:1.4.4
     container_name: peer0.org2.example.com
     environment:
       - CORE_PEER_ID=peer0.org2.example.com
@@ -73,7 +73,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
       - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_byfn
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_our_net
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_PROFILE_ENABLED=true
@@ -85,21 +85,21 @@ services:
     ports:
       - 8051:7051
     networks:
-      - byfn
+      - our_net
 
   couchdb0.org3:
     container_name: couchdb0.org3
-    image: hyperledger/fabric-couchdb
+    image: hyperledger/fabric-couchdb:0.4.18
     environment:
       - COUCHDB_USER=
       - COUCHDB_PASSWORD=
     ports:
-      - "7984:5984"
+      - 7984:5984
     networks:
-      - byfn
+      - our_net
 
   peer0.org3.example.com:
-    image: hyperledger/fabric-peer
+    image: hyperledger/fabric-peer:1.4.4
     container_name: peer0.org3.example.com
     environment:
       - CORE_PEER_ID=peer0.org3.example.com
@@ -107,7 +107,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.example.com:7051
       - CORE_PEER_LOCALMSPID=Org3MSP
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_byfn
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_our_net
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
       - CORE_PEER_PROFILE_ENABLED=true
@@ -122,15 +122,14 @@ services:
       - ./crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/fabric/msp
     ports:
       - 9051:7051
-      - 9053:7053
     networks:
-      - byfn
+      - our_net
     depends_on:
       - couchdb0.org3
 
   cli:
     container_name: cli
-    image: hyperledger/fabric-tools
+    image: hyperledger/fabric-tools:1.4.4
     tty: true
     environment:
       - GOPATH=/opt/gopath
@@ -147,4 +146,4 @@ services:
       - ./chaincode:/opt/gopath/src/github.com/
       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     networks:
-      - byfn
+      - our_net
