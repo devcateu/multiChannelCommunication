@@ -1,4 +1,5 @@
 import {Context, Contract} from 'fabric-contract-api';
+import {KeyValueContract} from "../keyvalue";
 
 export default class AgentContract extends Contract {
     constructor() {
@@ -9,7 +10,9 @@ export default class AgentContract extends Contract {
         // function which should be invoked when instantiate chaincode
     }
 
-    public async ping(ctx: Context): Promise<string> {
-        return 'Agent: ping';
+    public async get(ctx: Context, key: string): Promise<string> {
+        const keyValueContract = new KeyValueContract();
+        const result = await keyValueContract.get(ctx, key);
+        return "Agent see that KeyValueContract should return " + result;
     }
 }

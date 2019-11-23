@@ -1,5 +1,5 @@
 import {Context, Contract} from 'fabric-contract-api';
-import {ChaincodeResponse, ChaincodeStub} from 'fabric-shim';
+import {ChaincodeStub} from 'fabric-shim';
 import getBuffer from '../getBuffer';
 
 export default class KeyValueContract extends Contract {
@@ -9,10 +9,6 @@ export default class KeyValueContract extends Contract {
 
     public async instantiate() {
         // function which should be invoked when instantiate chaincode
-    }
-
-    public async ping(ctx: Context): Promise<string> {
-        return 'pong ' + ctx.clientIdentity.getID();
     }
 
     public async put(ctx: Context, key: string, value: string): Promise<string> {
@@ -27,7 +23,7 @@ export default class KeyValueContract extends Contract {
         return 'OK';
     }
 
-    public async putValueAndGetTime(ctx: Context, key: string, value: string): Promise<string> {
+    public async putValueAndReturnTime(ctx: Context, key: string, value: string): Promise<string> {
         const stub: ChaincodeStub = ctx.stub;
         await stub.putState(key, new Buffer(value));
         return 'OK'  + Date.now();

@@ -54,7 +54,6 @@ configtxgen -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.blo
 # create channel block file - it could be executed on any Peer
 sleep 5
 $PEER1_EXEC peer channel create -o orderer.example.com:7050 -c ${CHANNEL_ONE_NAME} -f /opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts/${CHANNEL_ONE_NAME}.tx
-sleep 3
 # join by Peer1
 $PEER1_EXEC peer channel join -b ${CHANNEL_ONE_NAME}.block
 $PEER1_EXEC peer channel update -o orderer.example.com:7050 -c ${CHANNEL_ONE_NAME} -f /opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts/Org1MSPanchors_${CHANNEL_ONE_NAME}.tx
@@ -68,58 +67,23 @@ $PEER3_EXEC peer channel update -o orderer.example.com:7050 -c ${CHANNEL_ONE_NAM
 ### joining channel12
 # create channel block file
 ($PEER1_EXEC peer channel create -o orderer.example.com:7050 -c $CHANNEL_TWO_NAME -f /opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts/${CHANNEL_TWO_NAME}.tx ) &&
-
 # join by Peer1
 ($PEER1_EXEC peer channel join -b ${CHANNEL_TWO_NAME}.block ) &&
 ($PEER1_EXEC peer channel update -o orderer.example.com:7050 -c $CHANNEL_TWO_NAME -f /opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts/Org1MSPanchors_${CHANNEL_TWO_NAME}.tx ) &&
-
 # join by Peer2
 ($PEER2_EXEC peer channel join -b ${CHANNEL_TWO_NAME}.block ) &&
 ($PEER2_EXEC peer channel update -o orderer.example.com:7050 -c $CHANNEL_TWO_NAME -f /opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts/Org2MSPanchors_${CHANNEL_TWO_NAME}.tx ) &&
-echo "joined" &&
+
 ### installing chaincode on each peer
 ($PEER1_EXEC peer chaincode install -n $CHAINCODE_RING -p "/opt/gopath/src/github.com" -v 1.0 -l "node" ) &&
 ($PEER2_EXEC peer chaincode install -n $CHAINCODE_RING -p "/opt/gopath/src/github.com" -v 1.0 -l "node" ) &&
 ($PEER3_EXEC peer chaincode install -n $CHAINCODE_RING -p "/opt/gopath/src/github.com" -v 1.0 -l "node" ) &&
 
 ($PEER1_EXEC peer chaincode install -n $CHAINCODE_ZING -p "/opt/gopath/src/github.com" -v 1.0 -l "node" ) &&
-($PEER2_EXEC peer chaincode install -n $CHAINCODE_ZING -p "/opt/gopath/src/github.com" -v 1.0 -l "node" ) &&
+#($PEER2_EXEC peer chaincode install -n $CHAINCODE_ZING -p "/opt/gopath/src/github.com" -v 1.0 -l "node" ) &&
 ($PEER3_EXEC peer chaincode install -n $CHAINCODE_ZING -p "/opt/gopath/src/github.com" -v 1.0 -l "node" ) &&
-sleep 3 &&
 
 ## instantiate chaincode
 $PEER1_EXEC peer chaincode instantiate -n $CHAINCODE_RING -v 1.0 -l "node" -c '{"function":"instantiate","Args":[]}' -C $CHANNEL_ONE_NAME -P "OR('Org1MSP.peer', 'Org2MSP.peer', 'Org3MSP.peer')" -o orderer.example.com:7050
 $PEER1_EXEC peer chaincode instantiate -n $CHAINCODE_RING -v 1.0 -l "node" -c '{"function":"instantiate","Args":[]}' -C $CHANNEL_TWO_NAME -P "OR('Org1MSP.peer', 'Org2MSP.peer')" -o orderer.example.com:7050
 $PEER1_EXEC peer chaincode instantiate -n $CHAINCODE_ZING -v 1.0 -l "node" -c '{"function":"instantiate","Args":[]}' -C $CHANNEL_ONE_NAME -P "OR('Org1MSP.peer', 'Org2MSP.peer', 'Org3MSP.peer')" -o orderer.example.com:7050
-sleep 3
-
-# invoke & query CHANNEL 1
-$PEER1_EXEC peer chaincode invoke -C $CHANNEL_ONE_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:put", "slawomir", "1000"]}'
-sleep 3
-echo "1: "
-$PEER1_EXEC peer chaincode query -C $CHANNEL_ONE_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:get", "slawomir"]}'
-echo "2: "
-$PEER2_EXEC peer chaincode query -C $CHANNEL_ONE_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:get", "slawomir"]}'
-echo "3: "
-$PEER3_EXEC peer chaincode query -C $CHANNEL_ONE_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:get", "slawomir"]}'
-
-# invoke & query CHANNEL 2
-$PEER1_EXEC peer chaincode invoke -C $CHANNEL_TWO_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:put", "devcat", "flying cat"]}'
-sleep 3
-echo "1: "
-$PEER1_EXEC peer chaincode query -C $CHANNEL_TWO_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:get", "devcat"]}'
-echo "2: "
-$PEER2_EXEC peer chaincode query -C $CHANNEL_TWO_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:get", "devcat"]}'
-echo "3: "
-$PEER3_EXEC peer chaincode query -C $CHANNEL_TWO_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:get", "devcat"]}'
-
-
-# invoke & query CHANNEL 1 chaincode 2
-$PEER1_EXEC peer chaincode invoke -C $CHANNEL_ONE_NAME -n $CHAINCODE_ZING -c '{"Args":["com.devcat.keyvalue:put", "sml", "1000"]}'
-sleep 3
-echo "1: "
-$PEER1_EXEC peer chaincode query -C $CHANNEL_ONE_NAME -n $CHAINCODE_ZING -c '{"Args":["com.devcat.keyvalue:get", "sml"]}'
-echo "2: "
-$PEER2_EXEC peer chaincode query -C $CHANNEL_ONE_NAME -n $CHAINCODE_ZING -c '{"Args":["com.devcat.keyvalue:get", "sml"]}'
-echo "3: "
-$PEER3_EXEC peer chaincode query -C $CHANNEL_ONE_NAME -n $CHAINCODE_ZING -c '{"Args":["com.devcat.keyvalue:get", "sml"]}'
