@@ -1,6 +1,8 @@
 TODO:
+ * dodać skrypt gdzie putuje do wszystkich 3 peerów
  * wolanie na channelu, ktory nie ma zainstalowanego chaincode
  * pokazać proste wywołanie   - przenieść do skryptów
+ * private data jak wygląda współdzielenie - jak to się tworzy
 
 co  chciałbym pokazać:
 - jak wołać chaincode
