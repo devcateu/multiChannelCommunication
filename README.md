@@ -1,6 +1,3 @@
-TODO:
- * private data jak wygląda współdzielenie - jak to się tworzy
-
 co  chciałbym pokazać:
 - jak wołać chaincode
 - jak wołać chaincode z chaincode i jakie daje Nam to gwarancje spójności:

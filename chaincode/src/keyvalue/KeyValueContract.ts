@@ -35,9 +35,9 @@ export default class KeyValueContract extends Contract {
 
         const value = buffer.toString();
         if(value === '') {
-            return 'NO RESULT FOR KEY'
+            return 'NO RESULT FOR ' + key
         } else {
-            return "Result for key is " + value;
+            return "Result for " + key + " is " + value;
         }
     }
 
