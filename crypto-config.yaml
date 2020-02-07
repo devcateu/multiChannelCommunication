@@ -1,27 +1,27 @@
 #This configuration file is used for generating the necessary certificates for different parties, including nodes and administrators.
 OrdererOrgs:
   - Name: Orderer
-    Domain: example.com
+    Domain: orderer.com
     EnableNodeOUs: true
     Specs:
       - Hostname: orderer
 PeerOrgs:
   - Name: Org1
-    Domain: org1.example.com
+    Domain: org1.orderer.com
     EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: Org2
-    Domain: org2.example.com
+    Domain: org2.orderer.com
     EnableNodeOUs: true
     Template:
       Count: 1
     Users:
       Count: 1
   - Name: Org3
-    Domain: org3.example.com
+    Domain: org3.orderer.com
     EnableNodeOUs: true
     Template:
       Count: 1

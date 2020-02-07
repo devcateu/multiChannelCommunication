@@ -1,5 +1,6 @@
 source scripts/.env
 
-$PEER1_EXEC peer chaincode invoke -C $CHANNEL_ONE_NAME -n $CHAINCODE_ZING -c '{"Args":["com.devcat.keyvalue:put", "secretCode", "1000"]}'
-sleep 3
-$PEER1_EXEC peer chaincode query -C $CHANNEL_ONE_NAME -n $CHAINCODE_RING -c "{\"Args\":[\"com.devcat.keyvalue:getFrom\", \"secretCode\", \"$CHAINCODE_ZING\"]}"
+$PEER1_EXEC peer chaincode invoke -C $CHANNEL_ALL_NAME -n $CHAINCODE_RING -c '{"Args":["com.devcat.keyvalue:put", "second", "1000"]}'
+sleep 3 # waiting to propagte transactions to peer
+$PEER1_EXEC peer chaincode query -C $CHANNEL_ALL_NAME -n $CHAINCODE_ZING -c "{\"Args\":[\"com.devcat.keyvalue:getFrom\", \"second\", \"$CHAINCODE_RING\"]}"
+$PEER1_EXEC peer chaincode query -C $CHANNEL12_NAME -n $CHAINCODE_RING -c "{\"Args\":[\"com.devcat.keyvalue:getFrom\", \"second\", \"$CHAINCODE_RING\", \"$CHANNEL_ALL_NAME\"]}"
