@@ -82,12 +82,12 @@ http://localhost:5984/_utils/#/_all_dbs
 Hyperledger Fabric pozwala na wywoływanie chaincodów ze sródka innego chaincoda. Do tego celu wykorzystywana jest metoda `stub.invokeChaincode`. Aby pokazać jak ona działa dodałem ją w funkcjach: `getFrom` oraz `putHereAndTo`. 
 Pierwsza z nich pobiera wartość z innego chaincodu lub/i channelu. `putHereAndTo` natomiast zapisuje dane do wskazanego chaincodu i channelu. Ich implementacje możecie zobaczyć poniżej: 
 ```
-KeyValueContract.ts  44-55
+KeyValueContract.ts  44-55 -> https://gist.github.com/devcateu/8aa2d4036b377c6cb5712dcd371d6833
 ```
 
 Na początek sprawdzimy jak działa zapytywanie o dane chaincodów na tym sammym jak i na innym channelu:
 ```
-02_takeValueFromOtherChaincode.sh
+02_takeValueFromOtherChaincode.sh -> https://gist.github.com/devcateu/d16cab263a99146cd8a133ccd9d7bb80
 ``` 
 W obu wypadkach dostaliśmy rezutltat:
 ```
@@ -97,7 +97,7 @@ Czyli działa i jesteśmy wstanie pobierać dane z innych chaincodów.
 
 Teraz sprawdźmy jak zachowa się zapisywanie danych. Najpierw kiedy wywołujemy zapisanie na tym samym channellu ale innym chaincodzie.
 ```
-03_putValueToOtherChaincodel.sh
+03_putValueToOtherChaincodel.sh -> https://gist.github.com/devcateu/06e05bb08d0e9a6313ce848032423ee7
 ```
 Po wywołaniu dostajemy rezultat:
 ```
@@ -106,13 +106,12 @@ From RING:
 Result for third is 9458
 From ZING:
 Result for third is 9458
-
 ```
 Czyli z tego wynika, że w ramach jednego channelu jesteśmy wstanie wywołać inny channel w celu zapisania na nim danych.
 
 Teraz zobaczmy co się wydarzy kiedy w podobny sposób będziemy chcieli zapisać dane na innym channellu.
 ```
-04_putValueToOtherChannel.sh
+04_putValueToOtherChannel.sh -> https://gist.github.com/devcateu/8ee7a60acebbdbaf0f667896be0f00e1
 ``` 
 Wynik:
 ```
@@ -129,7 +128,7 @@ więc orderer nie jest wstanie zapewnić spójności danych między channelami, 
 
 W tej sekcji chciałbym zaprezentować jeszcze jedną sytuację. org2 należy zarówno do `channelAll` oraz do `channel12`. Nie posiada on natomiast zainstalowanego chaincoda `zing`. Co stanie się kiedy będziemy próbować pobrać dane z tego chaincoda?
 ```
-05_takeValueFromOtherChaincodeButPeerDoesNotHaveContract.sh
+05_takeValueFromOtherChaincodeButPeerDoesNotHaveContract.sh -> https://gist.github.com/devcateu/75d6928f62e9e582338e6f612033d621
 ```
 Rezultat:
 ```
@@ -145,7 +144,7 @@ Innymi słowy spełniła endorsment policy. Często zdarze się, że wymagana je
 W tym celu podczas wywoływania chaincoda podaje się listę peerów do których ma trafić żądanie. Pomimo, że Nasze chaincody zostały uruchomione z polityką, 
 że wystarczy iż tylko jeden peer jest wstanie wykonać zapis danych to nadal możemy wywołać go jak gdyby była potrzebna większa ilość.
 ```
-06_simplePutDataToAllPeers.sh
+06_simplePutDataToAllPeers.sh -> https://gist.github.com/devcateu/89c1ba23c47ed900744198ebc79948eb
 ```
 Wynik:
 ```
@@ -158,13 +157,13 @@ Tutaj chciałbym pokazać na przykładzie pobieranie czasu systemowego co może 
 
 Wprowadźmy najpierw 2 funkcje:
 ```
-KeyValueContract.ts 20-30
+KeyValueContract.ts 20-30 -> https://gist.github.com/devcateu/5e24aee4f55cd1d965662abdc7d7cbce
 ```
 `putTime` zapisuje, obecny czas w millisekundach. Podczas gdy druga zapisuje wartość otrzymaną w parametrach, zwraca natomiast czas w millisekundach.
 
 Sprawdźmy jak zachowa się wywołanie dla `putTime`:
 ```
-07_putTime.sh
+07_putTime.sh -> https://gist.github.com/devcateu/6d241ba49de6ec5004ab21a9e13a8637
 ```
 Wynik:
 ```
@@ -174,7 +173,7 @@ NO RESULT FOR seventh
 
 A teraz dla `putValueAndReturnTime`:
 ```
-08_putValueAndReturnTime.sh
+08_putValueAndReturnTime.sh -> https://gist.github.com/devcateu/3ef15bc7b89e88d64bd02de4bd609b83
 ```
 Wynik:
 ```
@@ -190,15 +189,11 @@ Wracając jednak do żądań Http. Na podstawie powyższych doświadczeń sugeru
 dzięki czemu będzie mniejsze prawdopodobieństwo zakończenia działania chaincoda błędem. Moim zdaniem najlepszym wyjściem jest całkowite niekorzystanie z żądań HTTP oraz innych nieterministycznych wywołań. 
 Niech rezultat działania peer-a zależy wyłącznie od stanu w blockchainie oraz parametrów wejściowych funkcji.
 
-## TODO
-jeżeli, któraś z modyfikowanych wartości zmieniła się między wywołaniem peer-a a zatwierdzeniem transakcji przez orderera. Transakcja jest odrzucana.
-jeżeli transakcja modyfikuje dane, ale jednocześnie woła inny chaincode o dane i dane na tym innym chaincodzie zostaną zmodyfikowane cała. Transakcja jest odrzucana.
-
 ### Last Force
 
 Na koniec przyjrzyjmy się jeszcze kodowi poniżej:
 ```
-09_getWithoutFullContractName.sh
+09_getWithoutFullContractName.sh -> https://gist.github.com/devcateu/84d2417ce357c38d780d245e8634658f
 ```
 Jak widzimy jest to nic nadzwyczajnego. Dodajemy wartość a następnie ją pobieramy. Co ciekawe niepodajemy pelnej ścieżki do chaincoda, a tylko nazwę funkcji. 
 ```
